@@ -42,12 +42,12 @@ func NewFeedbackResponse() (resp *FeedbackResponse) {
 func (client *Client) ListenForFeedback() (err error) {
 	var cert tls.Certificate
 
-	if len(client.CertificateBase64) == 0 && len(client.KeyBase64) == 0 {
+	if len(client.Certificate) == 0 && len(client.Key) == 0 {
 		// The user did not specify raw block contents, so check the filesystem.
 		cert, err = tls.LoadX509KeyPair(client.CertificateFile, client.KeyFile)
 	} else {
 		// The user provided the raw block contents, so use that.
-		cert, err = tls.X509KeyPair([]byte(client.CertificateBase64), []byte(client.KeyBase64))
+		cert, err = tls.X509KeyPair(client.Certificate, client.Key)
 	}
 
 	if err != nil {

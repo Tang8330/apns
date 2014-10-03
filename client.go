@@ -16,23 +16,23 @@ import (
 // and KeyFile to send notifications. Ideally, you'll
 // just set the CertificateFile and KeyFile fields to
 // a location on drive where the certs can be loaded,
-// but if you prefer you can use the CertificateBase64
-// and KeyBase64 fields to store the actual contents.
+// but if you prefer you can use the Certificate
+// and Key fields to store the actual contents.
 type Client struct {
 	Gateway           string
 	CertificateFile   string
-	CertificateBase64 string
+	Certificate []byte
 	KeyFile           string
-	KeyBase64         string
+	Key         []byte
 }
 
 // BareClient can be used to set the contents of your
 // certificate and key blocks manually.
-func BareClient(gateway, certificateBase64, keyBase64 string) (c *Client) {
+func BareClient(gateway string, certificate, key []byte) (c *Client) {
 	c = new(Client)
 	c.Gateway = gateway
-	c.CertificateBase64 = certificateBase64
-	c.KeyBase64 = keyBase64
+	c.Certificate = certificate
+	c.Key = key
 	return
 }
 
@@ -85,12 +85,12 @@ func (client *Client) Send(pn *PushNotification) (resp *PushNotificationResponse
 func (client *Client) ConnectAndWrite(resp *PushNotificationResponse, payload []byte) (err error) {
 	var cert tls.Certificate
 
-	if len(client.CertificateBase64) == 0 && len(client.KeyBase64) == 0 {
+	if len(client.Certificate) == 0 && len(client.Key) == 0 {
 		// The user did not specify raw block contents, so check the filesystem.
 		cert, err = tls.LoadX509KeyPair(client.CertificateFile, client.KeyFile)
 	} else {
 		// The user provided the raw block contents, so use that.
-		cert, err = tls.X509KeyPair([]byte(client.CertificateBase64), []byte(client.KeyBase64))
+		cert, err = tls.X509KeyPair(client.Certificate, client.Key)
 	}
 
 	if err != nil {
