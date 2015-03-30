@@ -57,6 +57,7 @@ func NewPayload() *Payload {
 // From the APN docs: "Use the ... alert dictionary in general only if you absolutely need to."
 // The AlertDictionary is suitable for specific localization needs.
 type AlertDictionary struct {
+	Title string `json:"title,omitempty"`
 	Body         string   `json:"body,omitempty"`
 	ActionLocKey string   `json:"action-loc-key,omitempty"`
 	LocKey       string   `json:"loc-key,omitempty"`
