@@ -59,6 +59,8 @@ func NewPayload() *Payload {
 type AlertDictionary struct {
 	Title string `json:"title,omitempty"`
 	Body         string   `json:"body,omitempty"`
+	TitleLocKey string `json:"title-loc-key,omitempty"`
+	TitleLocArgs []string `json:"title-loc-args,omitempty"`
 	ActionLocKey string   `json:"action-loc-key,omitempty"`
 	LocKey       string   `json:"loc-key,omitempty"`
 	LocArgs      []string `json:"loc-args,omitempty"`
